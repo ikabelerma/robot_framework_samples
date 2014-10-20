@@ -1,0 +1,10 @@
+*** Settings ***
+Library           resources/ExampleLibrary.py
+
+*** Test Cases ***
+Hello World
+    ${return}    Return Hello World
+    Log    ${return}
+
+Convert to Upper Case
+    ${upper}    Convert to Upper Case    ika belerma

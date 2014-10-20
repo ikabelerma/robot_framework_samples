@@ -1,0 +1,30 @@
+*** Settings ***
+Library           DatabaseLibrary
+
+*** Test Cases ***
+Verify that James Carter is in the Database
+    Connect To Database     pymysql    petclinic    root    root    localhost    3306
+    ...    s
+    ${result_person}    Query    select first_name, last_name from person order by id asc;
+    Log    ${result_person}
+    Log    ${result_person[0][0]}
+    Log    ${result_person[0][1]}
+    Should Be Equal As Strings    James    ${result_person[0][0]}
+    Should Be Equal As Strings    Carter    ${result_person[0][1]}
+    [Teardown]    Disconnect From Database
+
+Verify that James Carter is in the Database (Pretty}
+    Verify that Person is Saved in DB    James    Carter
+
+*** Keywords ***
+Verify that Person is Saved in DB
+    [Arguments]    ${expected_first_name}    ${expected_last_name}
+    Connect To Database     pymysql    petclinic    root    root    localhost    3306
+    ...    s
+    ${result_person}    Query    select first_name, last_name from person order by id asc;
+    Log    ${result_person}
+    Log    ${result_person[0][0]}
+    Log    ${result_person[0][1]}
+    Should Be Equal As Strings    ${expected_first_name}    ${result_person[0][0]}
+    Should Be Equal As Strings    ${expected_last_name}    ${result_person[0][1]}
+    [Teardown]    Disconnect From Database

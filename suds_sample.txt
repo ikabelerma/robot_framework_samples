@@ -1,0 +1,35 @@
+*** Settings ***
+Library           SudsLibrary
+Library           XML
+
+*** Test Cases ***
+Get Weather by ZIP Code
+    Create Soap Client    ${CURDIR}/resources/Weather.wsdl
+    ${weather_by_zip}    Create Wsdl Object    ns0:GetCityWeatherByZIP
+    ${weather_by_zip.ZIP}    Set Variable    90210
+    Call Soap Method    GetCityWeatherByZIP    ${weather_by_zip}
+    ${soap_response}    Get Last Received
+    ${response_success}    Get Element Text    ${soap_response}    .//Success
+    Should Be Equal As Strings    true    ${response_success}
+
+Get Weather by ZIP Code (Pretty}
+    Create Weather SOAP Client
+    Send a GetCityWeatherByZIP Request    90210
+    Response Element Success Should Be    true
+
+*** Keywords ***
+Create Weather SOAP Client
+    Create Soap Client    ${CURDIR}/resources/Weather.wsdl
+
+Send a GetCityWeatherByZIP Request
+    [Arguments]    ${zip_code}
+    ${weather_by_zip}    Create Wsdl Object    ns0:GetCityWeatherByZIP
+    ${weather_by_zip.ZIP}    Set Variable    ${zip_code}
+    Call Soap Method    GetCityWeatherByZIP    ${weather_by_zip}
+    ${soap_response}    Get Last Received
+    Set Test Variable    ${soap_response}
+
+Response Element Success Should Be
+    [Arguments]    ${expected}
+    ${response_success}    Get Element Text    ${soap_response}    .//Success
+    Should Be Equal As Strings    ${expected}    ${response_success}

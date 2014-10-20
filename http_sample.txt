@@ -1,0 +1,37 @@
+*** Settings ***
+Library           HttpLibrary.HTTP
+
+*** Test Cases ***
+Get Weather By ZIP
+    Create Http Context    wsf.cdyne.com
+    Set Request Body    ZIP=90210
+    POST    /WeatherWS/Weather.asmx/GetCityWeatherByZIP
+    ${response_body}    Get Response Body
+    ${response_header}    Get Response Header    Date
+    ${response_status}    Get Response Status
+    Log Many    ${response_body}    ${response_header}    ${response_status}
+    Response Status Code Should Equal    200
+
+Get Weather By ZIP (Pretty)
+    Create a Weather HTTP Context
+    Set ZIP    90201
+    Send a GetCityWeatherByZIP Request
+    Get Response Body, Header Date and Status
+    Response Status Code Should Equal    200
+
+*** Keywords ***
+Create a Weather HTTP Context
+    Create Http Context    wsf.cdyne.com
+
+Set ZIP
+    [Arguments]    ${zip_code}
+    Set Request Body    ZIP=${zip_code}
+
+Send a GetCityWeatherByZIP Request
+    POST    /WeatherWS/Weather.asmx/GetCityWeatherByZIP
+
+Get Response Body, Header Date and Status
+    ${response_body}    Get Response Body
+    ${response_header}    Get Response Header    Date
+    ${response_status}    Get Response Status
+    Log Many    ${response_body}    ${response_header}    ${response_status}

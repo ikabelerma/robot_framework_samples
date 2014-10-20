@@ -1,0 +1,87 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Test Cases ***
+Add an Owner
+    Open Browser    http://localhost:8080/petclinic/
+    Click Link    Find owner
+    Click Link    Add Owner
+    Input Text    owner.firstName    Ika
+    Input Text    owner.lastName    Belerma
+    Input Text    owner.address    Zuellig Building
+    Input Text    owner.city    Makati City
+    Input Text    owner.telephone    12345
+    Click Button    Add Owner
+    Wait Until Element Is Visible    main
+    Page Should Contain    Ika Belerma
+    Page Should Contain    Zuellig Building
+    Page Should Contain    Makati City
+    Page Should Contain    12345
+    [Teardown]    Close All Browsers
+
+Add an Owner (Pretty)
+    Go to the Pet Clinic Homepage
+    Click the Find Owner Link
+    Click the Add Owner Link
+    Enter First Name    Ika
+    Enter Last Name    Belerma
+    Enter Address    Zuellig Building
+    Enter City    Makati City
+    Enter Telephone    12345
+    Click the Add Owner Button
+    Verify that Name Should Be Displayed    Ika Belerma
+    Verify that Address Should Be Displayed    Zuellig Building
+    Verify that City Should Be Displayed    Makati City
+    Verify that Telephone Should Be Displayed    12345
+    [Teardown]    Close All Browsers
+
+*** Keywords ***
+Go to the Pet Clinic Homepage
+    Open Browser    http://localhost:8080/petclinic/
+
+Click the Find Owner Link
+    Go to the Pet Clinic Homepage
+    Click Link    Find owner
+
+Click the Add Owner Link
+    Click Link    Add Owner
+
+Enter First Name
+    [Arguments]    ${first_name}
+    Input Text    owner.firstName    ${first_name}
+
+Enter Last Name
+    [Arguments]    ${last_name}
+    Input Text    owner.lastName    ${last_name}
+
+Enter Address
+    [Arguments]    ${address}
+    Input Text    owner.address    ${address}
+
+Enter City
+    [Arguments]    ${city}
+    Input Text    owner.city    ${city}
+
+Enter Telephone
+    [Arguments]    ${telephone}
+    Input Text    owner.telephone    ${telephone}
+
+Click the Add Owner Button
+    Click Button    Add Owner
+
+Verify that Name Should Be Displayed
+    [Arguments]    ${name}
+    Wait Until Element Is Visible    main
+    Page Should Contain    ${name}
+
+Verify that Address Should Be Displayed
+    [Arguments]    ${address}
+    Page Should Contain    ${address}
+
+Verify that City Should Be Displayed
+    [Arguments]    ${city}
+    Page Should Contain    ${city}
+
+Verify that Telephone Should Be Displayed
+    [Arguments]    ${telephone}
+    Page Should Contain    ${telephone}
